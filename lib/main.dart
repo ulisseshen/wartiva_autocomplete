@@ -24,13 +24,13 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
-    _controller.addListener(_updateCursorPosition);
+    _controller.addListener(_updateSuggestionPosition);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
-    _controller.removeListener(_updateCursorPosition);
+    _controller.removeListener(_updateSuggestionPosition);
     _controller.dispose();
     _focusNode.dispose();
     _overlayEntry?.remove();
@@ -38,7 +38,7 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
   }
 
   // Atualiza a posição do cursor
-  void _updateCursorPosition() {
+  void _updateSuggestionPosition() {
     setState(() {
       _cursorPosition = _controller.selection.extent;
     });
@@ -125,7 +125,7 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
                   .map((suggestion) => ListTile(
                         title: Text(suggestion),
                         onTap: () {
-                          // _onSuggestionSelected(suggestion);
+                          _onSuggestionSelected(suggestion);
                         },
                       ))
                   .toList(),
@@ -135,6 +135,32 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
       ),
     );
     Overlay.of(context).insert(_overlayEntry!);
+  }
+
+    void _onSuggestionSelected(String suggestion) {
+    final text = _controller.text;
+
+    if (text.endsWith('.')) {
+      _controller.text = '$text$suggestion';
+    } else {
+      final textParts = text.split('.');
+      textParts.removeLast();
+      _controller.text = '${textParts.join('.')}.$suggestion';
+    }
+
+    _controller.selection = TextSelection.fromPosition(
+      TextPosition(offset: _controller.text.length),
+    );
+
+    _scheduleOverlayUpdate();
+  }
+
+    void _scheduleOverlayUpdate() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _updateSuggestionPosition();
+      }
+    });
   }
 
   // Traverse the render tree to find the RenderEditable
