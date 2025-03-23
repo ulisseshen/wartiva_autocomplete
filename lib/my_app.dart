@@ -134,7 +134,7 @@ class _MyAppState extends State<MyApp> {
     } else {
       final textParts = text.split('.');
       textParts.removeLast();
-      _controller.text = '${textParts.join('.')}$suggestion';
+      _controller.text = '${textParts.join('.')}.$suggestion';
     }
 
     _controller.selection = TextSelection.fromPosition(
