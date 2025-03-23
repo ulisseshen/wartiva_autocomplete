@@ -189,13 +189,13 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Posição do Cursor')),
+      appBar: AppBar(title: Text('Task with default fonte')),
     
       body: SizedBox(
         width: 500,
         child: Column(
           children: [
-            TextField(
+            TextFormField(
               key: _editableTextKey,
               controller: _controller,
               focusNode: _focusNode,
@@ -214,7 +214,7 @@ class _CursorPositionExampleState extends State<CursorPositionExample> {
                   return MyApp();
                 }));
               },
-              child: const Text('Original task  '),
+              child: const Text('Original task  >>'),
             ),
           ],
         ),
